@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Echo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+    <p>
+        <button id="startRecording">Start recording</button>
+        <button id="stopRecording" disabled>Stop recording and Transcribe</button>
+    </p>
+    <p> <span id="transcription">
+      {{ text }}
+    </span> </p>
+</body>
+<script>
+    navigator
+        .mediaDevices
+        .getUserMedia({audio: true})
+        .then(stream => { handlerFunction(stream) });
+
+    function handlerFunction(stream) {
+        rec = new MediaRecorder(stream);
+        rec.ondataavailable = e => {
+            audioChunks.push(e.data);
+            if (rec.state == "inactive") {
+                let blob = new Blob(audioChunks, {type: 'audio/wav'});
+                sendData(blob);
+            }
+        }
+    }
+
+    function sendData(data) {
+        function updateTranscription(text) {
+          $("#transcription").text(text);
+        }
+
+        var form = new FormData();
+        form.append('file', data, 'data.wav');
+        form.append('title', 'data.wav');
+        $.ajax({
+            type: 'POST',
+            url: '/save-record',
+            data: form,
+            cache: false,
+            processData: false,
+            contentType: false,
+        }).done(function(data) {
+            updateTranscription(data.text);
+        });
+    }
+
+    startRecording.onclick = e => {
+        console.log('Recording is started..');
+        startRecording.disabled = true;
+        stopRecording.disabled = false;
+        audioChunks = [];
+        rec.start();
+    };
+
+    stopRecording.onclick = e => {
+        console.log("Recording is stopped.");
+        startRecording.disabled = false;
+        stopRecording.disabled = true;
+        rec.stop();
+    };
+</script>
+</html>
