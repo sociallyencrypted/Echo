@@ -1,0 +1,5 @@
+flask
+SpeechRecognition
+pydub
+python_dotenv
+openai

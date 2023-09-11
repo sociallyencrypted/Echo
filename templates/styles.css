@@ -1,0 +1,41 @@
+body {
+    font-family: Inter;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .chat-container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .chat-messages {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .message-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+  }
+  
+  .message {
+    max-width: 80%;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .sender .message {
+    background-color: #007bff;
+    color: #fff;
+    align-self: flex-end;
+  }
+  
+  .receiver .message {
+    background-color: #f0f0f0;
+    color: #000;
+    align-self: flex-start;
+  }
+  

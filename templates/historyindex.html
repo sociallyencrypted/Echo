@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+  <style>
+    body {
+      font-family: Inter;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .chat-container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+    }
+    
+    .chat-messages {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .message-container {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 10px;
+    }
+    
+    .message {
+      max-width: 80%;
+      padding: 10px;
+      border-radius: 8px;
+      background-color:  #192A64;
+    color: #fff;
+    align-self: flex-end;
+    border-radius: 15px;
+    border-bottom-right-radius: 0px;
+    }
+    
+    .sender .message {
+      background-color:  #192A64;
+    color: #fff;
+    align-self: flex-end;
+    border-radius: 15px;
+    border-bottom-right-radius: 0px;
+    }
+    
+    .receiver .message {
+    background-color: #f0f0f0;
+    color: #000;
+    align-self: flex-start;
+    border-radius: 15px;
+    border-bottom-left-radius: 0px;
+    }
+  </style>  
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-messages" id="chat-messages">
+      <!-- Messages will be displayed here -->
+    </div>
+    <div class="message-box">
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const chatMessages = document.getElementById("chat-messages");
+
+      // Fetch chats from /chats endpoint
+      fetch("/chats")
+        .then(response => response.json())
+        .then(chats => {
+          // Loop through fetched chats and display them
+          chats.forEach(chat => {
+            // each chat is of the format ["other"/"user", "message"]
+            const messageContainer = document.createElement("div");
+            messageContainer.classList.add("message-container");
+
+            const message = document.createElement("div");
+            message.classList.add(chat[0] === "other" ? "receiver" : "sender", "message");
+            message.textContent = chat[1];
+
+            messageContainer.appendChild(message);
+            chatMessages.appendChild(messageContainer);
+          });
+        })
+        .catch(error => console.error("Error fetching chats:", error));
+    });
+  </script>
+</body>
+</html>

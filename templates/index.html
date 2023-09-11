@@ -1,18 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Echo</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Add any additional meta tags, CSS links, or other head content here -->
+      <style>
+        @font-face {
+            font-family: "CircularMed";
+            src: url({{ url_for('static', filename='CircularStd-Medium.otf')}}) format('opentype');
+        }
+
+        @font-face {
+            font-family: "CircularLight";
+            src: url({{ url_for('static', filename='CircularStd-Light.otf')}}) format('opentype');
+        }
+
+        body,
+        button,
+        h1 {
+            font-family: "CircularMed", sans-serif;
+        }
+
+        input,
+        p {
+            font-family: "CircularLight", sans-serif;
+            color:#fff
+        }
+
+        body {
+            height: fit-content;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+            margin: 0;
+            font-family: "CircularMed", sans-serif;
+            font-size: 16px;
+            color: #284094;
+            overflow-x: hidden;
+
+        }
+
+        #logo {
+            width: 200px;
+            padding-top: 40px;
+        }
+
+        #app {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #nav {
+            width: 100%;
+            text-align: center;
+            /* margin-bottom: 20px; */
+            gap: -10px
+        }
+
+        #toggleRecording {
+            border: none;
+            background: none;
+        }
+
+        .pill-input-container {
+            display: flex;
+            align-items: center;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 20px;
+            background-color: #284094;
+            color:#fff;
+            border-radius: 25px;
+            padding: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #toggleRecording {
+            width: 100%;
+        }
+
+        ::placeholder {
+            color: #fff;
+        }
+
+        #pill-input-container {
+            display: flex;
+            align-items: center;
+            width: 80%;
+            margin-bottom: 20px;
+            margin-top: auto;
+            /* Add this line to push it to the top */
+            background-color: #284094;
+            border-radius: 25px;
+            padding: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .pill-input {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            outline: none;
+            background-color: #284094;
+            
+        }
+
+        .pill-button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+
+        input {
+            font-size: 20px;
+        }
+
+        #bottom {
+            width: 100%;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: #284094;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            /* Add some padding for spacing */
+        }
+
+        #transcription{
+            font-size: 45px;
+        }
+        #genResponses {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .genResp {
+            border: 3px solid white;
+            padding: 10px;
+            padding-inline: 30px;
+            margin: 5px;
+            display: inline-block;
+            color: #fff;
+            border-radius: 8px;
+            font-family: "CircularLight", sans-serif;
+        }
+
+        #spline {
+            height: 40vh;
+        }
+
+        .sends {
+            width: 40px;
+        }
+
+        #hint {
+            font-size: 12px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 9999;
+        }
+        
+        .popup-content {
+            position: relative;
+            max-width: 80%;
+            margin: 10% auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            font-size: 200px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 40px;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
-    <p>
-        <button id="startRecording">Start recording</button>
-        <button id="stopRecording" disabled>Stop recording and Transcribe</button>
-    </p>
-    <p> <span id="transcription">
-      {{ text }}
-    </span> </p>
+    <div id="app">
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <span class="close-btn" id="closePopup">&times;</span>
+                <div id="popupText"></div>
+            </div>
+        </div>
+        <div id="nav">
+            <img src={{ url_for('static', filename='Group 1.svg')}} id="logo">
+            <h1>Tap to start the conversation</h1>
+        </div>
+        <iframe id="spline" src='https://my.spline.design/echo-c0ae7fab41d524831aa8c4c001e4a93b/' frameborder='0'
+        width='100%' height='100%'></iframe>
+        <button id="toggleRecording">
+            Start recording
+        </button>
+                <div style="height: 60px;"></div>
+        <div id="pill-input-container">
+            <input class="pill-input" id="chatinput" type="text" placeholder="Type your response:">
+            <button class="pill-button" onclick="location.href='/history'">
+                <img class="sends" src={{ url_for('static', filename='Chat.png')}} alt="Button 1">
+            </button>
+            <button class="pill-button">
+                <img class="sends" src={{ url_for('static', filename='Send Letter.png')}} alt="Button 2" id="send">
+            </button>
+        </div>
+        <div id="bottom">
+            <p id="hint">tap to select a response</p>
+            <h1 id="transcription">{{ text }}</h1>
+            <div id="genResponses">
+                <div class="genResp">
+                    Getting response from chatGPT
+                </div>
+                <div class="genResp">
+                    Getting response from chatGPT
+                </div>
+                <div class="genResp">
+                    Getting response from chatGPT
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script>
     navigator
@@ -36,6 +271,13 @@
           $("#transcription").text(text);
         }
 
+        function updateSuggestions(suggestions) {
+            $("#genResponses").empty();
+            for (var i = 0; i < suggestions.length; i++) {
+                $("#genResponses").append("<div class='genResp'>" + suggestions[i] + "</div>");
+            }
+        }
+
         var form = new FormData();
         form.append('file', data, 'data.wav');
         form.append('title', 'data.wav');
@@ -48,22 +290,50 @@
             contentType: false,
         }).done(function(data) {
             updateTranscription(data.text);
+            updateSuggestions(data.predict);
         });
     }
 
-    startRecording.onclick = e => {
-        console.log('Recording is started..');
-        startRecording.disabled = true;
-        stopRecording.disabled = false;
-        audioChunks = [];
-        rec.start();
+    $(document).ready(function() {
+        // Click event handler for predictions
+        $(document).on('click', '.genResp', function() {
+            var predictionText = $(this).text();
+            $("#chatinput").val(predictionText);
+        });
+        $("#send").click(function() {
+            var text = $("#chatinput").val();
+            $.ajax({
+                type: 'POST',
+                url: '/chat',
+                data: {text: text},
+            }).done(function(data) {
+                console.log(data);
+            
+                // Display popup with sent text
+                $("#popupText").text(text);
+                $("#popup").css("display", "block");
+            });
+        });
+    
+        // Click event handler for close button in the popup
+        $("#closePopup").click(function() {
+            $("#popup").css("display", "none");
+        });
+    });
+    
+    toggleRecording.onclick = e => {
+        if (toggleRecording.textContent === "Start recording") {
+            toggleRecording.textContent = "Stop recording";
+            console.log('Recording is started..');
+            audioChunks = [];
+            rec.start();
+        } else {
+            toggleRecording.textContent = "Start recording";
+            console.log('Recording is stopped..');
+            rec.stop();
+        }
+        
     };
 
-    stopRecording.onclick = e => {
-        console.log("Recording is stopped.");
-        startRecording.disabled = false;
-        stopRecording.disabled = true;
-        rec.stop();
-    };
 </script>
 </html>
