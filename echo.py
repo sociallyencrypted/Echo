@@ -64,7 +64,7 @@ def save_record():
         print(text)
         chat.append(('other', text))
         response  = openai.Completion.create(
-            model="text-davinci-003",
+            model="gpt-3.5-turbo-instruct",
             prompt=text,
             max_tokens=20, 
             temperature=0.5,  
