@@ -4,14 +4,16 @@ from flask import Flask, flash, request, redirect, render_template, jsonify
 from speech_recognition import Recognizer, AudioFile
 from pydub import AudioSegment
 from dotenv import load_dotenv
-import openai
+from openai import OpenAI
 
 UPLOAD_FOLDER = 'files'
 load_dotenv()
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-openai.api_key = os.getenv('CHATGPT_API_KEY')
+client = OpenAI(
+    api_key=os.getenv('CHATGPT_API_KEY')
+)
 
 # save the user chat into a list of tuples.
 
@@ -63,15 +65,15 @@ def save_record():
         text = recognizer.recognize_google(audio_data)
         print(text)
         chat.append(('other', text))
-        response  = openai.Completion.create(
-            model="gpt-3.5-turbo-instruct",
-            prompt=text,
-            max_tokens=20, 
-            temperature=0.5,  
-            n=3 
+        response  = client.chat.completions.create(
+            model="gpt-4-turbo",
+            messages=[
+                {"role": "system", "content": "You are helping a deaf person, to whom people talk using text. You need to give suggestions to respond to the text."},
+                {"role": "user", "content": text}
+            ]
         )
         os.remove(pcm_file_name)
-        response = [r['text'] for r in response['choices']]
+        response = [ x.message.content for x in response.choices ]
         return jsonify(text=text, predict=response)
     
 @app.route('/chat', methods=['POST'])
