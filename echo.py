@@ -1,6 +1,7 @@
 import os
 import uuid
 from flask import Flask, flash, request, redirect, render_template, jsonify
+from flask_cors import CORS
 from speech_recognition import Recognizer, AudioFile
 from pydub import AudioSegment
 from dotenv import load_dotenv
@@ -10,6 +11,7 @@ UPLOAD_FOLDER = 'files'
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 client = OpenAI(
     api_key=os.getenv('CHATGPT_API_KEY')
@@ -91,4 +93,4 @@ def chatadd():
         
     
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=31337, debug=False)
+    app.run(host="0.0.0.0", port=31337, debug=True)

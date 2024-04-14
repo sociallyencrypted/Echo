@@ -302,10 +302,12 @@ input {
     $(document).ready(function() {
         // Click event handler for predictions
         $(document).on('click', '.genResp', function() {
+            console.log("Clicked on prediction");
             var predictionText = $(this).text();
             $("#chatinput").val(predictionText);
         });
         $("#send").click(function() {
+            console.log("Clicked on send button");
             var text = $("#chatinput").val();
             $.ajax({
                 type: 'POST',
@@ -322,11 +324,13 @@ input {
     
         // Click event handler for close button in the popup
         $("#closePopup").click(function() {
+            console.log("Clicked on close button");
             $("#popup").css("display", "none");
         });
     });
     
     toggleRecording.onclick = e => {
+        console.log('toggleRecording clicked');
         if (toggleRecording.textContent === "Start recording") {
             toggleRecording.textContent = "Stop recording";
             console.log('Recording is started..');
