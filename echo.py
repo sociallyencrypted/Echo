@@ -65,16 +65,19 @@ def save_record():
         text = recognizer.recognize_google(audio_data)
         print(text)
         chat.append(('other', text))
-        response  = client.chat.completions.create(
+        response = client.chat.completions.create(
             model="gpt-4-turbo",
             messages=[
-                {"role": "system", "content": "You are helping a deaf person, to whom people talk using text. You need to give suggestions to respond to the text."},
+                {"role": "system", "content": "You are helping a deaf person, to whom people talk using text. You need to give suggestions to respond to the text. Don't respond back with anything except for the Text Suggestions"},
                 {"role": "user", "content": text}
-            ]
+            ],
+            n=3  # Requesting 3 completions
         )
         os.remove(pcm_file_name)
-        response = [ x.message.content for x in response.choices ]
-        return jsonify(text=text, predict=response)
+        predictions = [ x.message.content for x in response.choices ]
+        jsonify(text=text, predict=predictions)
+        print(response)
+        return jsonify(text=text, predict=predictions)
     
 @app.route('/chat', methods=['POST'])
 def chatadd():
