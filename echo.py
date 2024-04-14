@@ -68,7 +68,7 @@ def save_record():
         response = client.chat.completions.create(
             model="gpt-4-turbo",
             messages=[
-                {"role": "system", "content": "You are helping a deaf person, to whom people talk using text. You need to give suggestions to respond to the text. Don't respond back with anything except for the Text Suggestions"},
+                {"role": "system", "content": "You are helping a deaf person, to whom people talk using text. You need to give suggestions to respond to the text. Don't respond back with anything except for the Text Suggestions. Give a single Response without Quotation marks or numbering"},
                 {"role": "user", "content": text}
             ],
             n=3  # Requesting 3 completions
