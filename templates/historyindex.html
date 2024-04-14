@@ -15,44 +15,40 @@
       max-width: 500px;
       margin: auto;
       padding: 20px;
+      background-color: #ffffff; /* White background for the chat container */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     }
     
     .chat-messages {
       display: flex;
       flex-direction: column;
+      margin-bottom: 20px;
     }
     
     .message-container {
-      display: flex;
-      justify-content: flex-start;
+      display: flex; /* Aligns children (messages) to the start by default */
       margin-bottom: 10px;
+      flex-direction: column;
     }
     
     .message {
       max-width: 80%;
       padding: 10px;
-      border-radius: 8px;
-      background-color:  #192A64;
-    color: #fff;
-    align-self: flex-end;
-    border-radius: 15px;
-    border-bottom-right-radius: 0px;
+      border-radius: 15px; /* Uniform rounded corners */
     }
     
-    .sender .message {
-      background-color:  #192A64;
-    color: #fff;
-    align-self: flex-end;
-    border-radius: 15px;
-    border-bottom-right-radius: 0px;
+    .sendermessage {
+      background-color: #192A64; /* Dark blue background for sender */
+      color: #fff; /* White text for readability */
+      align-self: flex-end; /* Aligns this message to the right */
+      border-bottom-right-radius: 0; /* Differentiates it visually as a sender's message */
     }
     
-    .receiver .message {
-    background-color: #f0f0f0;
-    color: #000;
-    align-self: flex-start;
-    border-radius: 15px;
-    border-bottom-left-radius: 0px;
+    .receivermessage {
+      background-color: #f0f0f0; /* Light grey background for receiver */
+      color: #000; /* Black text for contrast */
+      align-self: flex-start; /* Aligns this message to the left */
+      border-bottom-left-radius: 0; /* Differentiates it visually as a receiver's message */
     }
   </style>  
 </head>
@@ -67,7 +63,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const chatMessages = document.getElementById("chat-messages");
-
+  
       // Fetch chats from /chats endpoint
       fetch("/chats")
         .then(response => response.json())
@@ -77,11 +73,13 @@
             // each chat is of the format ["other"/"user", "message"]
             const messageContainer = document.createElement("div");
             messageContainer.classList.add("message-container");
-
+  
             const message = document.createElement("div");
-            message.classList.add(chat[0] === "other" ? "receiver" : "sender", "message");
+            // Apply specific class names based on the sender or receiver
+            const messageClass = chat[0] === "other" ? "receivermessage" : "sendermessage";
+            message.classList.add(messageClass, "message");
             message.textContent = chat[1];
-
+  
             messageContainer.appendChild(message);
             chatMessages.appendChild(messageContainer);
           });
