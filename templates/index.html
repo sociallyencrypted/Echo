@@ -7,201 +7,208 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Add any additional meta tags, CSS links, or other head content here -->
       <style>
-        @font-face {
-            font-family: "CircularMed";
-            src: url({{ url_for('static', filename='CircularStd-Medium.otf')}}) format('opentype');
-        }
+/* Common styles */
+@font-face {
+    font-family: "CircularMed";
+    src: url({{ url_for('static', filename='CircularStd-Medium.otf')}}) format('opentype');
+}
 
-        @font-face {
-            font-family: "CircularLight";
-            src: url({{ url_for('static', filename='CircularStd-Light.otf')}}) format('opentype');
-        }
+@font-face {
+    font-family: "CircularLight";
+    src: url({{ url_for('static', filename='CircularStd-Light.otf')}}) format('opentype');
+}
 
-        body,
-        button,
-        h1 {
-            font-family: "CircularMed", sans-serif;
-        }
+body,
+button,
+h1 {
+    font-family: "CircularMed", sans-serif;
+}
 
-        input,
-        p {
-            font-family: "CircularLight", sans-serif;
-            color:#fff
-        }
+input,
+p {
+    font-family: "CircularLight", sans-serif;
+    color: #fff;
+}
 
-        body {
-            height: fit-content;
-            width: 100vw;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
-            align-items: center;
-            margin: 0;
-            font-family: "CircularMed", sans-serif;
-            font-size: 16px;
-            color: #284094;
-            overflow-x: hidden;
+body {
+    height: fit-content;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 0;
+    font-family: "CircularMed", sans-serif;
+    font-size: 16px;
+    color: #284094;
+    overflow-x: hidden;
+}
 
-        }
+#logo {
+    width: 200px;
+    padding-top: 40px;
+}
 
-        #logo {
-            width: 200px;
-            padding-top: 40px;
-        }
+#app {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
 
-        #app {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
+#nav {
+    width: 100%;
+    text-align: center;
+    gap: -10px;
+}
 
-        #nav {
-            width: 100%;
-            text-align: center;
-            /* margin-bottom: 20px; */
-            gap: -10px
-        }
+#toggleRecording {
+    border: none;
+    background: none;
+}
 
-        #toggleRecording {
-            border: none;
-            background: none;
-        }
-
-        .pill-input-container {
-            display: flex;
-            align-items: center;
-            width: 80%;
-            max-width: 300px;
-            margin-bottom: 20px;
-            background-color: #284094;
-            color:#fff;
-            border-radius: 25px;
-            padding: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        #toggleRecording {
-            width: 100%;
-        }
-
-        ::placeholder {
-            color: #fff;
-        }
-
-        #pill-input-container {
-            display: flex;
-            align-items: center;
-            width: 80%;
-            margin-bottom: 20px;
-            margin-top: auto;
-            /* Add this line to push it to the top */
-            background-color: #284094;
-            border-radius: 25px;
-            padding: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+.pill-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: start; /* Add this line to center horizontally */
+    width: 40%;
+    margin-bottom: 20px;
+    margin-top: auto;
+    background-color: #fff;
+    border-radius: 25px;
+    padding: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
 
-        .pill-input {
-            flex-grow: 1;
-            border: none;
-            padding: 10px;
-            border-radius: 20px;
-            outline: none;
-            background-color: #284094;
-            
-        }
+.pill-input {
+    flex-grow: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+    color: #284094;
+    outline: none;
+    background-color: #f2f2f2;
+}
 
-        .pill-button {
-            border: none;
-            background: none;
-            cursor: pointer;
-            margin: 0 5px;
-        }
+.pill-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 0 5px;
+}
 
-        input {
-            font-size: 20px;
-        }
+input {
+    font-size: 20px;
+}
 
-        #bottom {
-            width: 100%;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background-color: #284094;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            /* Add some padding for spacing */
-        }
+#bottom {
+    width: 100%;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #284094;
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    padding-top: 20px;
+    padding-bottom: 20px;
+    overflow-y: auto;
+}
 
-        #transcription{
-            font-size: 45px;
-        }
-        #genResponses {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
 
-        .genResp {
-            border: 3px solid white;
-            padding: 10px;
-            padding-inline: 30px;
-            margin: 5px;
-            display: inline-block;
-            color: #fff;
-            border-radius: 8px;
-            font-family: "CircularLight", sans-serif;
-        }
+#transcription {
+    font-size: 45px;
+}
 
-        #spline {
-            height: 40vh;
-        }
+.genResp {
+    border: 3px solid white;
+    padding: 10px;
+    padding-inline: 30px;
+    margin: 5px;
+    display: inline-block;
+    color: #fff;
+    border-radius: 8px;
+    font-family: "CircularLight", sans-serif;
+}
 
-        .sends {
-            width: 40px;
-        }
+#spline {
+    height: 40vh;
+}
 
-        #hint {
-            font-size: 12px;
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
-            z-index: 9999;
-        }
-        
-        .popup-content {
-            position: relative;
-            max-width: 80%;
-            margin: 10% auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            font-size: 200px;
-        }
-        
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 40px;
-            cursor: pointer;
-        }
+.sends {
+    width: 40px;
+}
+
+#hint {
+    font-size: 12px;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+}
+
+.popup-content {
+    position: relative;
+    max-width: 80%;
+    margin: 10% auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-size: 18px; /* Adjust font size as needed */
+    word-wrap: break-word; /* Add this property */
+}
+
+.popup-content #popupText {
+    font-size: 100px; /* Customize font size for popup text */
+    color: #284094; /* Customize text color for popup text */
+    max-height: 80vh; /* Set maximum height */
+    overflow-y: auto; /* Enable vertical scrolling*/
+    /* position:absolute;
+    align-self: center; */
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+/* Mobile responsiveness */
+@media only screen and (max-width: 600px) {
+    #app {
+        padding: 20px;
+    }
+
+    #nav {
+        gap: 0;
+    }
+
+    #logo {
+        width: 150px;
+        padding-top: 20px;
+    }
+
+    .pill-input-container {
+        width: 80%;
+    }
+}
+
     </style>
 </head>
 
@@ -215,14 +222,14 @@
         </div>
         <div id="nav">
             <img src={{ url_for('static', filename='Group 1.svg')}} id="logo">
-            <h1>Tap to start the conversation</h1>
+            <h1 id="transcription">Tap to start the conversation</h1>
         </div>
-        <iframe id="spline" src='https://my.spline.design/echo-c0ae7fab41d524831aa8c4c001e4a93b/' frameborder='0'
-        width='100%' height='100%'></iframe>
+        <iframe id="spline" src='https://my.spline.design/echo-c0ae7fab41d524831aa8c4c001e4a93b/' frameborder='0' width='100%' height='100%'></iframe>
         <button id="toggleRecording">
             Start recording
         </button>
                 <div style="height: 60px;"></div>
+        <div id="bottom">        
         <div id="pill-input-container">
             <input class="pill-input" id="chatinput" type="text" placeholder="Type your response:">
             <button class="pill-button" onclick="location.href='/history'">
@@ -232,9 +239,7 @@
                 <img class="sends" src={{ url_for('static', filename='Send Letter.png')}} alt="Button 2" id="send">
             </button>
         </div>
-        <div id="bottom">
-            <p id="hint">tap to select a response</p>
-            <h1 id="transcription">{{ text }}</h1>
+                <div style="height: 20px;"></div>
             <div id="genResponses">
                 <div class="genResp">
                     Getting response from chatGPT
